@@ -13,8 +13,6 @@ else()
 	set(iverbs_lib ibverbs)
 endif()
 
-find_package(ZLIB REQUIRED)
-
 #===============================================================================
 # LIBRARY
 #===============================================================================
@@ -29,15 +27,15 @@ if(WIN32)
 	add_dependencies(libhdrdmacp winibverbs)
 endif()
 target_compile_definitions(libhdrdmacp PRIVATE _CRT_SECURE_NO_WARNINGS BUILDING_HDRDMA)
-target_link_libraries(libhdrdmacp ${iverbs_lib} ${ZLIB_LIBRARY})
-target_include_directories(libhdrdmacp PRIVATE ${ZLIB_INCLUDE_DIRS} ${winibverbs_include})
+target_link_libraries(libhdrdmacp ${iverbs_lib} zlib)
+target_include_directories(libhdrdmacp PRIVATE ${winibverbs_include})
 
-set_target_properties(libhdrdmacp PROPERTIES OUTPUT_NAME hdrdmacp)
+set_target_properties(libhdrdmacp PROPERTIES
+	OUTPUT_NAME hdrdmacp
+	PUBLIC_HEADER IhdRDMA.h
+)
 
-install(TARGETS libhdrdmacp DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(FILES 
-	IhdRDMA.h
-	DESTINATION include)
+install(TARGETS libhdrdmacp)
 
 #===============================================================================
 # APPLICATION
